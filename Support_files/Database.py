@@ -97,4 +97,10 @@ class Database():
             with open(os.path.join(path, name + ".csv"), 'w') as f:
                 self.cursor.copy_expert(outputquery, f)
 
+    def clear_table(self, name):
+        if self.isInDatabase(name):
+            query = "DELETE FROM {}".format(name)
+            self.cursor.execute(query)
+            return True
+        return False
 
