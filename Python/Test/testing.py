@@ -1,5 +1,5 @@
-from Support_files.Database import *
-from Support_files.potholeDetectionProcess import *
+from Python.Database import *
+from Python.potholeDetectionProcess import *
 from ultralytics import YOLO
 import psycopg2
 from datetime import datetime, timezone

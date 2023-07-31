@@ -2,8 +2,8 @@ import tkinter
 import tkinter.ttk
 import tkinter.messagebox
 import tkinter.filedialog
-from Support_files.potholeDetectionProcess import *
-from Support_files.Database import *
+from Python.potholeDetectionProcess import *
+from Python.Database import *
 
 
 class App(tkinter.Tk):
