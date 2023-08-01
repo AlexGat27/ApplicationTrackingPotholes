@@ -2,7 +2,7 @@ import cv2
 from ultralytics import YOLO
 from datetime import datetime, timezone
 import random
-from Python.Database import *
+from src.Database import *
 import os
 import numpy as np
 
