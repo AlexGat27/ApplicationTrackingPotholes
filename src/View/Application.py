@@ -7,7 +7,7 @@ from src.View.ChildrenViews.HomeView import *
 class App(tkinter.Tk):
     """Класс приложения"""
     TITLE = "Geosystem"
-    __text_opt = {'font':('Bold', 12), 'fg':"#00BFFF", 'bg':"#EDFEFF"}
+    __text_opt = {'font':("Comic Sans MS", 13, "bold"), 'fg':"#00BFFF", 'bg':"#EDFEFF"}
     __winNum = 0
     views = []
 

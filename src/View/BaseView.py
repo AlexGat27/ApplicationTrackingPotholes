@@ -9,6 +9,7 @@ import tkinter.filedialog
 
 class BaseView(tkinter.Frame):
     leftBG = '#E1E7E5'
+    default_font = ("Comic Sans MS", 13)
 
     def __create_and_pack_elements(self):
         self.left_frame = tkinter.Frame(self, bg=self.leftBG)

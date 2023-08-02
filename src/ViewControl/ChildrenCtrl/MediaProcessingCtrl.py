@@ -1,4 +1,4 @@
 from src.ViewControl.BaseCtrl import *
 
-class MediaProcessingCtrl():
+class MediaProcessingCtrl(BaseCtrl):
     pass
