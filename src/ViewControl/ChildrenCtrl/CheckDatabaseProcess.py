@@ -1,4 +1,4 @@
 from src.ViewControl.BaseCtrl import *
 
-class CheckDatabaseProcess(BaseCtrl):
+class CheckDatabaseProcess():
     pass

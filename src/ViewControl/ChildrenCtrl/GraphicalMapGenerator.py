@@ -1,4 +1,4 @@
 from src.ViewControl.BaseCtrl import *
 
-class GraphicalMapGenerator(BaseCtrl):
+class GraphicalMapGenerator():
     pass

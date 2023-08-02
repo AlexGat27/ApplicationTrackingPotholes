@@ -4,7 +4,7 @@ from src.ViewControl.ChildrenCtrl.MediaProcessingCtrl import *
 class MediaProcessingView(BaseView):
     
     def __create_and_pack_elements(self):
-        super().create_and_pack_elements()
+        pass
 
     def __init__(self):
         super().__init__()

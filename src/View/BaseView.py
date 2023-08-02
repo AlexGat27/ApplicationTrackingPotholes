@@ -1,12 +1,16 @@
+from src.Database import *
+from src.ViewControl.BaseCtrl import *
+import json
 import tkinter
 import tkinter.ttk
 import tkinter.messagebox
 import tkinter.filedialog
 
+
 class BaseView(tkinter.Frame):
     leftBG = '#E1E7E5'
 
-    def create_and_pack_elements(self):
+    def __create_and_pack_elements(self):
         self.left_frame = tkinter.Frame(self, bg=self.leftBG)
         self.left_frame.pack(side='left')
         self.left_frame.pack_propagate(False)
@@ -19,11 +23,13 @@ class BaseView(tkinter.Frame):
         self.console = tkinter.Text(self.right_frame)
         self.console.place(relx=0.01, y=150, relwidth=0.98, height=300)
 
+    def __init__(self):
+        super().__init__()
+        self.config(bg="#F4FCFB", highlightthickness=1.5, highlightbackground="black")
+        self.__create_and_pack_elements()
+        self.packFrame()
+
     def packFrame(self):
         self.pack(padx=3, pady=3, fill='both')
         self.pack_propagate(False)
         self.configure(width=700, height=470)
-    
-    def __init__(self):
-        super().__init__()
-        self.config(bg="#F4FCFB", highlightthickness=1.5, highlightbackground="black")
