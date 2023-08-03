@@ -3,8 +3,22 @@ from src.ViewControl.ChildrenCtrl.MediaProcessingCtrl import *
 
 class MediaProcessingView(BaseView):
 
+    def __set_model(self):
+        model_path = tkinter.filedialog.askopenfilename()
+        succesful = self.mediaProcessCtrl.set_model(model_path)
+        if succesful:
+            self.model_entry.config(state="normal")
+            self.model_entry.insert(0, model_path.split('/')[-1])
+            self.model_entry.config(state="disabled")
+
     def __action_btn_clicked(self):
-        pass
+        name = self.combobox.get()
+        if self.record_change_val.get() == 1:
+            self.mediaProcessCtrl.image_into_table(name)
+        elif self.record_change_val.get() == 2:
+            self.mediaProcessCtrl.video_into_table(name)
+        else:
+            self.mediaProcessCtrl.recordConsole("Не выбрано действие (обработать фото или видео)\n\n")
     
     def __create_and_pack_elements(self):
         record_radio_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)
@@ -17,12 +31,21 @@ class MediaProcessingView(BaseView):
                                            value=2, font=self.default_font, bg=self.leftBG)
         video_radio.pack(pady=[0, 25], side="bottom")
 
-        label6 = tkinter.Label(self.right_frame, text="Название таблицы", font=("Bold", 13))
+        self.model_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)
+        self.model_frame.place(y=160, relwidth=0.9, relx=0.05, height=450)
+        model_label = tkinter.Label(self.model_frame, text="Название модели", font=self.default_font, bg=self.leftBG)
+        model_label.pack(pady=5, fill="x")
+        self.model_entry = tkinter.Entry(self.model_frame, state="disabled")
+        self.model_entry.pack(pady=5, fill="x")
+        set_model_btn = tkinter.Button(self.model_frame, text="Загрузить модель", command=self.__set_model)
+        set_model_btn.pack(fill='x', pady=5) 
+
+        label6 = tkinter.Label(self.right_frame, text="Название таблицы", font=self.default_font)
         label6.pack(pady=5, fill="x")
         self.combobox = tkinter.ttk.Combobox(self.right_frame)
         self.combobox.pack(pady=5, fill="x", padx=5)
-        self.action_table_btn = tkinter.Button(self.right_frame, text="Запиcать в таблицу", command=self.__action_btn_clicked)
-        self.action_table_btn.pack(fill='x', pady=5, padx=5)
+        action_table_btn = tkinter.Button(self.right_frame, text="Запиcать в таблицу", command=self.__action_btn_clicked)
+        action_table_btn.pack(fill='x', pady=5, padx=5)
 
         buttons_frame = tkinter.Frame(self.right_frame)
         buttons_frame.place(y=110, relx=0.01, relwidth=0.98, height=30)
