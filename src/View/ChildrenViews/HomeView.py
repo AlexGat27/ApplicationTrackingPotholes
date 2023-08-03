@@ -13,7 +13,7 @@ class HomeView(BaseView):
         self.homeviewControl.connectToBD(host, user, password, database, port)
 
     def __action_btn_clicked(self):
-        name = self.name_table.get()
+        name = self.nametable_combobox.get()
         if self.creatOfDelete.get() == 1:
             self.homeviewControl.create_table(name)
         elif self.creatOfDelete.get() == 2:
@@ -69,8 +69,9 @@ class HomeView(BaseView):
         #Расположение элементов домашней страницы
         label6 = tkinter.Label(self.right_frame, text="Название таблицы", font=("Bold", 13))
         label6.pack(pady=3)
-        self.name_table = tkinter.Entry(self.right_frame)
-        self.name_table.pack(pady=3, fill='x', padx=5)
+        self.nametable_combobox = tkinter.ttk.Combobox(self.right_frame, values=self.homeviewControl.set_tables_combobox(),
+                                              postcommand=lambda: self.nametable_combobox.configure(values=self.homeviewControl.set_tables_combobox()))
+        self.nametable_combobox.pack(pady=3, fill="x", padx=5)
 
         radio_frame = tkinter.Frame(self.right_frame)
         radio_frame.pack(fill="x", padx=3, pady=3)

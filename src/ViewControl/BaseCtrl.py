@@ -43,3 +43,8 @@ class BaseCtrl():
             table_stroka += '{} '.format(i)
         self.recordConsole(table_stroka + "\n\n") 
 
+    def set_tables_combobox(self):
+        if not(self.database.isConnect):
+            return None
+        return self.database._getTables()[1]
+

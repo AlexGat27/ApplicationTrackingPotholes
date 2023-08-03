@@ -80,6 +80,10 @@ class MediaProcessingCtrl(BaseCtrl):
         if not(self.checkConnectionBD()):
             return None
         
+        if self.model is None:
+            self.recordConsole("Не выбрана модель\n\n")
+            return None
+        
         if self.database.isInDatabase(name):
             directory = tkinter.filedialog.askdirectory()
             media = os.listdir(directory)
@@ -96,6 +100,10 @@ class MediaProcessingCtrl(BaseCtrl):
     def video_into_table(self, name):
         if not(self.checkConnectionBD()):
             return None
+        
+        if self.model is None:
+            self.recordConsole("Не выбрана модель\n\n")
+            return None
 
         if self.database.isInDatabase(name):
             video_path = tkinter.filedialog.askopenfilename()
@@ -107,4 +115,4 @@ class MediaProcessingCtrl(BaseCtrl):
 
     def __init__(self, console):
         super().__init__(console)
-        self.model = None
+        self.model = YOLO(os.path.join('Yolo_model', os.listdir('Yolo_model')[0]))

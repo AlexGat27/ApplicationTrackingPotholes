@@ -2,6 +2,7 @@ from src.View.BaseView import *
 from src.ViewControl.ChildrenCtrl.MediaProcessingCtrl import *
 
 class MediaProcessingView(BaseView):
+    __tables = []
 
     def __set_model(self):
         model_path = tkinter.filedialog.askopenfilename()
@@ -35,14 +36,17 @@ class MediaProcessingView(BaseView):
         self.model_frame.place(y=160, relwidth=0.9, relx=0.05, height=450)
         model_label = tkinter.Label(self.model_frame, text="Название модели", font=self.default_font, bg=self.leftBG)
         model_label.pack(pady=5, fill="x")
-        self.model_entry = tkinter.Entry(self.model_frame, state="disabled")
+        self.model_entry = tkinter.Entry(self.model_frame)
         self.model_entry.pack(pady=5, fill="x")
+        self.model_entry.insert(0, os.listdir('Yolo_model')[0])
+        self.model_entry.config(state="disabled")
         set_model_btn = tkinter.Button(self.model_frame, text="Загрузить модель", command=self.__set_model)
         set_model_btn.pack(fill='x', pady=5) 
 
         label6 = tkinter.Label(self.right_frame, text="Название таблицы", font=self.default_font)
         label6.pack(pady=5, fill="x")
-        self.combobox = tkinter.ttk.Combobox(self.right_frame)
+        self.combobox = tkinter.ttk.Combobox(self.right_frame, values=self.__tables,
+                                              postcommand=lambda: self.combobox.configure(values=self.mediaProcessCtrl.set_tables_combobox()))
         self.combobox.pack(pady=5, fill="x", padx=5)
         action_table_btn = tkinter.Button(self.right_frame, text="Запиcать в таблицу", command=self.__action_btn_clicked)
         action_table_btn.pack(fill='x', pady=5, padx=5)
