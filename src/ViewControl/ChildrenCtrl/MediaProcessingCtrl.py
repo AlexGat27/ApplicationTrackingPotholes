@@ -5,11 +5,15 @@ import random
 import datetime
 import numpy as np
 
+#Класс-обработчик медиафайлов
 class MediaProcessingCtrl(BaseCtrl):
-    __support_img_ext = ['bmp', 'dng', 'jpeg', 'jpg', 'mpo', 'png', 'tif', 'tiff', 'webp', 'pfm']
+    #Поддерживаемые разрешения
+    __support_img_ext = ['bmp', 'dng', 'jpeg', 'jpg', 'mpo', 'png', 'tif', 'tiff', 'webp', 'pfm', 'JPG'] 
     __support_vid_ext = ['asf', 'avi', 'gif', 'm4v', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'ts', 'wmv', 'webm']
+    #Рандомные улицы
     __street = ['Ushakova', 'Kirovogradskaia', 'Naximova', 'Zakamskaia', 'Ribalko', 'Astraxanskaia']
 
+    #Основной процесс обработки видео, записи стопкадров в папку Media/{nametable} и координат в таблицу
     def __videoProcessing(self, model, video_path, database, nametable, is_save_frame=True):
         if video_path.split('.')[-1] in self.__support_vid_ext:
             cap = cv2.VideoCapture(video_path)
@@ -46,6 +50,7 @@ class MediaProcessingCtrl(BaseCtrl):
             cap.release()
             return len(ids)
 
+    #Основной процесс обработки фото, записи фотографии в папку Media/{nametable} и координат в таблицу
     def __imageProcessing(self, model, image_path, database, nametable, is_save_frame=True):
         if image_path.split('.')[-1] in self.__support_img_ext:
             result = model(image_path)[0]
@@ -66,6 +71,7 @@ class MediaProcessingCtrl(BaseCtrl):
         else:
             return False
         
+    #Установка модели
     def set_model(self, model_path):
         if model_path.split('.')[-1] == 'pt':
             self.model = YOLO(model_path)
@@ -75,7 +81,7 @@ class MediaProcessingCtrl(BaseCtrl):
             self.recordConsole("Ошибка, такой модели не существует\n\n")
             return False
 
-    #Функция записи в таблицу
+    #Функция проверки подключения, модели, таблицы перед обработкой фото
     def image_into_table(self, name):
         if not(self.checkConnectionBD()):
             return None
@@ -97,6 +103,7 @@ class MediaProcessingCtrl(BaseCtrl):
         else:
             self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(name))
 
+    #Функция проверки подключения, модели, таблицы перед обработкой видео
     def video_into_table(self, name):
         if not(self.checkConnectionBD()):
             return None

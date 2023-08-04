@@ -1,6 +1,7 @@
 from src.View.BaseView import *
 from src.ViewControl.ChildrenCtrl.HomeViewCtrl import *
 
+#Класс-вьювер для отображения домашнего окна 
 class HomeView(BaseView):
     __default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'postgres', 'port':'5432'}
 

@@ -4,12 +4,13 @@ from src.View.ChildrenViews.GraphicMapView import *
 from src.View.ChildrenViews.MediaProcessingView import *
 from src.View.ChildrenViews.HomeView import *
 
+#Класс приложения, объединяющий все страницы и запускающий главное окно
 class App(tkinter.Tk):
     """Класс приложения"""
-    TITLE = "Geosystem"
-    __text_opt = {'font':("Comic Sans MS", 13, "bold"), 'fg':"#00BFFF", 'bg':"#EDFEFF"}
-    __winNum = 0
-    views = []
+    TITLE = "Geosystem" 
+    __text_opt = {'font':("Comic Sans MS", 13, "bold"), 'fg':"#00BFFF", 'bg':"#EDFEFF"} #Базовые настройки текста
+    __winNum = 0 #Текущая открытая страница
+    views = [] #Здесь будут располагаться страницы
 
     #Конфигурация окна
     def __configure_window(self):
@@ -17,6 +18,7 @@ class App(tkinter.Tk):
         self.geometry("700x500+1000+100") 
         self.resizable(False, False)
 
+    #Переключение страниц
     def __switchWindow(self, winNum):
         for view in self.views:
             view.forget()
