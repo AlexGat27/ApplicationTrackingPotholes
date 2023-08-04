@@ -5,12 +5,13 @@ from datetime import datetime, timezone
 import random
 import os
 
-#Осуществялется с паттерном "Одиночка"
 class Database():
+    #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
     default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'postgres', 'port':'5432'}
     __columns = '(time_detect, time_add, adress, latitude, longitude, pothole_class)' #Колонки, в которые ведется запись
 
+    #Переопределение метода __new__ для создания только одного объекта класса
     def __new__(cls):
         if Database.instance == None:
             Database.instance = super().__new__(cls)
@@ -37,6 +38,7 @@ class Database():
         except (Exception, Error) as error:
             return "[Info] Error while working with PostgreSQL: {}".format(error)
         
+    #Отключение от базы данных
     def disconnect_from_bd(self):
         self.cursor.close()
         self.connection.close()
@@ -90,6 +92,7 @@ class Database():
         else:
             return False
         
+    #Экспорт таблицы 
     def export_table(self, path, name):
         if self.isInDatabase(name):
             query = "SELECT * FROM {}".format(name)
@@ -97,6 +100,7 @@ class Database():
             with open(os.path.join(path, name + ".csv"), 'w') as f:
                 self.cursor.copy_expert(outputquery, f)
 
+    #Очистка таблицы
     def clear_table(self, name):
         if self.isInDatabase(name):
             query = "DELETE FROM {}".format(name)

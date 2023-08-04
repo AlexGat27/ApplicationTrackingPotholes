@@ -6,9 +6,10 @@ import tkinter.ttk
 import tkinter.messagebox
 import tkinter.filedialog
 
-
+#Базовый класс-вьювер с элементами на странице по умолчанию
 class BaseView(tkinter.Frame):
-    leftBG = '#E1E7E5'
+    leftBG = '#E1E7E5' #Цвет левого фрейма
+    default_font = ("Comic Sans MS", 13) #Базовый шрифт (можно поменять)
 
     def __create_and_pack_elements(self):
         self.left_frame = tkinter.Frame(self, bg=self.leftBG)
@@ -29,6 +30,7 @@ class BaseView(tkinter.Frame):
         self.__create_and_pack_elements()
         self.packFrame()
 
+    #Метод для запаковки фрема при их изменении при переключении страницы
     def packFrame(self):
         self.pack(padx=3, pady=3, fill='both')
         self.pack_propagate(False)
