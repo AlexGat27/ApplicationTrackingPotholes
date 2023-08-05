@@ -35,13 +35,17 @@ class MediaProcessingCtrl(BaseCtrl):
                         for id in results.boxes.id.cpu().numpy().astype(int):
                             if id not in ids: 
                                 ids.append(id)
-                                database.insert_to_table(nametable, random.choice(self.__street), random.uniform(-100, 100), random.uniform(-100, 100), random.randint(1, 4))
+                                time_add = datetime.now()
+                                time_detect = datetime.today()
+                                database.insert_to_table(nametable,time_detect, time_add, random.choice(self.__street),
+                                                          random.uniform(-100, 100), random.uniform(-100, 100), random.randint(1, 4))
                                 if is_save_frame:
                                     name_file = "Annotated_" + video_path.split('/')[-1].split('.')[0] + '_' + str(id) + '.jpg'
                                     tofile_path = os.path.join(name_folder, name_file)
                                     for box, conf in zip(boxes, confidence):
                                         frame = cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
-                                        frame = cv2.putText(frame, f"Conf {conf:0.2f}", (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+                                        frame = cv2.putText(frame, f"Conf {conf:0.2f}", (box[0], box[1]),
+                                                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
                                     cv2.imwrite(tofile_path, frame)
                     if cv2.waitKey(30) == ord('q'):
                         break
@@ -81,30 +85,8 @@ class MediaProcessingCtrl(BaseCtrl):
             self.recordConsole("Ошибка, такой модели не существует\n\n")
             return False
 
-    #Функция проверки подключения, модели, таблицы перед обработкой фото
-    def image_into_table(self, name):
-        if not(self.checkConnectionBD()):
-            return None
-        
-        if self.model is None:
-            self.recordConsole("Не выбрана модель\n\n")
-            return None
-        
-        if self.database.isInDatabase(name):
-            directory = tkinter.filedialog.askdirectory()
-            media = os.listdir(directory)
-            self.recordConsole("Идет процесс обработки папки с фото...\n")
-            for med in media:
-                image_path = os.path.join(directory, med).replace(os.sep, '/')
-                succes = self.__imageProcessing(self.model, image_path, self.database, name)
-                if succes: self.recordConsole("Фото {} обработано успешно\n".format(med))
-                else: self.recordConsole("Ошибка обработки фото {}, такого разрешения не существует \n".format(med))
-            self.recordConsole("Запись в таблицу {} совершена успешно\n\n".format(name))
-        else:
-            self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(name))
-
-    #Функция проверки подключения, модели, таблицы перед обработкой видео
-    def video_into_table(self, name):
+    #Функция проверки подключения, модели, таблицы перед обработкой медиафайлов
+    def mediaProcessing(self, name, index=1):
         if not(self.checkConnectionBD()):
             return None
         
@@ -113,10 +95,23 @@ class MediaProcessingCtrl(BaseCtrl):
             return None
 
         if self.database.isInDatabase(name):
-            video_path = tkinter.filedialog.askopenfilename()
-            self.recordConsole("Идет процесс обработки видео...\n")
-            succes = self.__videoProcessing(self.model, video_path, self.database, name)
-            if succes: self.recordConsole("Запись видео {} в таблицу {} совершена успешно\n\n".format(video_path.split('/')[-1], name))
+
+            if index == 1:
+                directory = tkinter.filedialog.askdirectory()
+                media = os.listdir(directory)
+                self.recordConsole("Идет процесс обработки папки с фото...\n")
+                for med in media:
+                    image_path = os.path.join(directory, med).replace(os.sep, '/')
+                    succes = self.__imageProcessing(self.model, image_path, self.database, name)
+                    if succes: self.recordConsole("Фото {} обработано успешно\n".format(med))
+                    else: self.recordConsole("Ошибка обработки фото {}, такого разрешения не существует \n".format(med))
+                self.recordConsole("Запись в таблицу {} совершена успешно\n\n".format(name))
+
+            elif index == 2:
+                video_path = tkinter.filedialog.askopenfilename()
+                self.recordConsole("Идет процесс обработки видео...\n")
+                succes = self.__videoProcessing(self.model, video_path, self.database, name)
+                if succes: self.recordConsole("Запись видео {} в таблицу {} совершена успешно\n\n".format(video_path.split('/')[-1], name))
         else:
             self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(name))
 

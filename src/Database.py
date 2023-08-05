@@ -62,11 +62,9 @@ class Database():
         self.sizeDB, self.tables = Database._getTables(self)
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable, adress='0', latitude=0, longitude=0, pothole_class=0):
+    def insert_to_table(self, nametable, time_detect, time_add, adress='0', latitude=0, longitude=0, pothole_class=0):
         if Database.isInDatabase(self, nametable):
-            today = datetime.now()
-            time_detect = datetime.today()
-            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s, %s, %s)''', (time_detect, today, adress, latitude, longitude, pothole_class))
+            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s, %s, %s)''', (time_detect, time_add, adress, latitude, longitude, pothole_class))
 
     #Получение количества и списка таблиц
     def _getTables(self):
