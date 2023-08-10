@@ -33,23 +33,23 @@ class App(tkinter.Tk):
         options_frame.pack_propagate(False)
         options_frame.configure(width=700, height=30)
 
-        self.views = [HomeView(), CheckDatabaseView(), MediaProcessingView(), ExcelGeneratorView(), GraphicMapView()]
+        self.views = [HomeView(), MediaProcessingView(), ExcelGeneratorView()]
 
-        home_btn = tkinter.Button(options_frame, text="Home", font=self.__text_opt['font'],
-                                  fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(0))
-        home_btn.pack(side="left", padx=[50,12])
-        checkDatabasePage_btn = tkinter.Button(options_frame, text="CheckPage", font=self.__text_opt['font'],
-                                  fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(1))
-        checkDatabasePage_btn.pack(side="left", padx=12)
+        # checkDatabasePage_btn = tkinter.Button(options_frame, text="CheckPage", font=self.__text_opt['font'],
+        #                           fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(1))
+        # checkDatabasePage_btn.pack(side="left", padx=12)
         mediaProcessPage_btn = tkinter.Button(options_frame, text="MediaPage", font=self.__text_opt['font'],
                                   fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(2))
-        mediaProcessPage_btn.pack(side="left", padx=12)
+        mediaProcessPage_btn.pack(side="left", padx=100)
+        home_btn = tkinter.Button(options_frame, text="Home", font=self.__text_opt['font'],
+                                  fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(0))
+        home_btn.pack(side="left", padx=[100,30])
         excelGeneratorPage_btn = tkinter.Button(options_frame, text="ExcelPage", font=self.__text_opt['font'],
                                   fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(3))
-        excelGeneratorPage_btn.pack(side="left", padx=12)
-        graphmapGeneratorPage_btn = tkinter.Button(options_frame, text="GraphicMapPage", font=self.__text_opt['font'],
-                                  fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(4))
-        graphmapGeneratorPage_btn.pack(side="left", padx=[12,50])
+        excelGeneratorPage_btn.pack(side="left", padx=[30, 100])
+        # graphmapGeneratorPage_btn = tkinter.Button(options_frame, text="GraphicMapPage", font=self.__text_opt['font'],
+        #                           fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(4))
+        # graphmapGeneratorPage_btn.pack(side="left", padx=[12,50])
 
     #Инициализация класса
     def __init__(self):
