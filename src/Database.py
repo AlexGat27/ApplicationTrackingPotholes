@@ -8,8 +8,8 @@ import os
 class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
-    default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'postgres', 'port':'5432'}
-    __columns = '(time_detect, time_add, adress, latitude, longitude, pothole_class)' #Колонки, в которые ведется запись
+    default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'PostgresGPS', 'port':'5432'}
+    __columns = '(time_detect, time_add, adress, Coordinates)' #Колонки, в которые ведется запись
 
     #Переопределение метода __new__ для создания только одного объекта класса
     def __new__(cls):
@@ -55,16 +55,15 @@ class Database():
                     time_detect TIMESTAMP,
                     time_add TIMESTAMP,
                     adress text COLLATE pg_catalog."default" NOT NULL,
-                    latitude numeric NOT NULL,
-                    longitude numeric NOT NULL,
-                    pothole_class integer NOT NULL);'''
+                    Coordinates geometry(Point, 3857);'''
                 )
         self.sizeDB, self.tables = Database._getTables(self)
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable, time_detect, time_add, adress='0', latitude=0, longitude=0, pothole_class=0):
+    def insert_to_table(self, nametable, time_detect, time_add, adress='0', latitude=0, longitude=0):
         if Database.isInDatabase(self, nametable):
-            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s, %s, %s)''', (time_detect, time_add, adress, latitude, longitude, pothole_class))
+            coordinates = 'Point({},{})'.format(latitude, longitude)
+            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s, %s, %s)''', (time_detect, time_add, adress, coordinates))
 
     #Получение количества и списка таблиц
     def _getTables(self):
