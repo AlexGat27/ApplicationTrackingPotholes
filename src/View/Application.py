@@ -8,7 +8,7 @@ from src.View.ChildrenViews.HomeView import *
 class App(tkinter.Tk):
     """Класс приложения"""
     TITLE = "Geosystem" 
-    __text_opt = {'font':("Comic Sans MS", 13, "bold"), 'fg':"#00BFFF", 'bg':"#EDFEFF"} #Базовые настройки текста
+    __text_opt = {'font':("Comic Sans MS", 13, "bold"), 'fg':"#000000", 'bg':"#EDFEFF"} #Базовые настройки текста
     __winNum = 0 #Текущая открытая страница
     views = [] #Здесь будут располагаться страницы
 
