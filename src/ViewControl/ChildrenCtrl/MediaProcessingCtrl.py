@@ -2,7 +2,7 @@ from src.ViewControl.BaseCtrl import *
 import cv2
 from ultralytics import YOLO
 import random
-import datetime
+from datetime import datetime
 import numpy as np
 
 #Класс-обработчик медиафайлов
@@ -36,10 +36,10 @@ class MediaProcessingCtrl(BaseCtrl):
                         for id in results.boxes.id.cpu().numpy().astype(int):
                             if id not in ids: 
                                 ids.append(id)
-                                time_add = datetime.now()
+                                time_add = datetime.today()
                                 time_detect = datetime.today()
                                 database.insert_to_table(nametable,time_detect, time_add, random.choice(self.__street),
-                                                          random.uniform(3360000, 3400000), random.uniform(8370000, 8400000))
+                                                          random.uniform(3360000, 3400000), random.uniform(8370000, 8400000), random.randint(1,4))
                                 if is_save_frame:
                                     name_file = "Annotated_" + video_path.split('/')[-1].split('.')[0] + '_' + str(id) + '.jpg'
                                     tofile_path = os.path.join(name_folder, name_file)
@@ -61,9 +61,10 @@ class MediaProcessingCtrl(BaseCtrl):
             result = model(image_path)[0]
 
             for i in range(len(result.boxes)):
-                time_add = datetime.now()
+                time_add = datetime.today()
                 time_detect = datetime.today()
-                database.insert_to_table(nametable, random.choice(self.__street), random.uniform(3360000, 3400000), random.uniform(8370000, 8400000))
+                database.insert_to_table(nametable, time_add, time_detect, random.choice(self.__street),
+                                          random.uniform(3360000, 3400000), random.uniform(8370000, 8400000), random.randint(1,4))
 
             if is_save_frame:
                 annotated_frame = result.plot()

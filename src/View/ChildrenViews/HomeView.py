@@ -3,7 +3,7 @@ from src.ViewControl.ChildrenCtrl.HomeViewCtrl import *
 
 #Класс-вьювер для отображения домашнего окна 
 class HomeView(BaseView):
-    __default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'postgres', 'port':'5432'}
+    __default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'PostgresGPS', 'port':'5432'}
 
     def __connect_btn_clicked(self):
         host = self.name_host.get()

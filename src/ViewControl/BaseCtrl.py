@@ -45,7 +45,7 @@ class BaseCtrl():
         table_stroka = ''
         for i in tables:
             table_stroka += '{} '.format(i)
-        self.recordConsole("Таблицы в базе данных: " + table_stroka + "\n\n") 
+        self.recordConsole("Таблицы в базе данных:\n" + table_stroka + "\n\n") 
 
     #Помещения сущесвтующих таблиц 
     def set_tables_combobox(self):

@@ -2,7 +2,6 @@ from src.View.BaseView import *
 from src.ViewControl.ChildrenCtrl.MediaProcessingCtrl import *
 
 class MediaProcessingView(BaseView):
-    __tables = []
 
     def __set_model(self):
         model_path = tkinter.filedialog.askopenfilename()
@@ -15,9 +14,9 @@ class MediaProcessingView(BaseView):
     def __action_btn_clicked(self):
         name = self.combobox.get()
         if self.record_change_val.get() == 1:
-            self.mediaProcessCtrl.image_into_table(name)
+            self.mediaProcessCtrl.mediaProcessing(name, 1)
         elif self.record_change_val.get() == 2:
-            self.mediaProcessCtrl.video_into_table(name)
+            self.mediaProcessCtrl.mediaProcessing(name, 2)
         else:
             self.mediaProcessCtrl.recordConsole("Не выбрано действие (обработать фото или видео)\n\n")
     
@@ -45,7 +44,7 @@ class MediaProcessingView(BaseView):
 
         label6 = tkinter.Label(self.right_frame, text="Название таблицы", font=self.default_font)
         label6.pack(pady=5, fill="x")
-        self.combobox = tkinter.ttk.Combobox(self.right_frame, values=self.__tables,
+        self.combobox = tkinter.ttk.Combobox(self.right_frame, values=self.mediaProcessCtrl.set_tables_combobox(),
                                               postcommand=lambda: self.combobox.configure(values=self.mediaProcessCtrl.set_tables_combobox()))
         self.combobox.pack(pady=5, fill="x", padx=5)
         action_table_btn = tkinter.Button(self.right_frame, text="Запиcать в таблицу", command=self.__action_btn_clicked)

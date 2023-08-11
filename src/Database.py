@@ -1,15 +1,14 @@
-from ultralytics import YOLO
 import psycopg2
 from psycopg2 import Error
-from datetime import datetime, timezone
-import random
 import os
+import numpy as np
 
 class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
     default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'PostgresGPS', 'port':'5432'}
-    __columns = '(time_detect, time_add, adress, Coordinates)' #Колонки, в которые ведется запись
+    __columns = '(time_detect, time_add, adress, geometry, pothole_class)' #Колонки, в которые ведется запись
+    __notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
 
     #Переопределение метода __new__ для создания только одного объекта класса
     def __new__(cls):
@@ -21,7 +20,7 @@ class Database():
         self.isConnect = False
 
     #Подключение к Базе данных
-    def connect_to_bd(self, host='127.0.0.1', user='postgres', password='Shurikgat2704', database='postgres', port='5432'):
+    def connect_to_bd(self, host='127.0.0.1', user='postgres', password='Shurikgat2704', database='PostgresGPS', port='5432'):
         try:
             self.connection = psycopg2.connect(
                 host=host,
@@ -55,23 +54,31 @@ class Database():
                     time_detect TIMESTAMP,
                     time_add TIMESTAMP,
                     adress text COLLATE pg_catalog."default" NOT NULL,
-                    Coordinates geometry(Point, 3857);'''
+                    geometry geometry(Point, 3857),
+                    pothole_class SMALLINT);'''
                 )
         self.sizeDB, self.tables = Database._getTables(self)
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable, time_detect, time_add, adress='0', latitude=0, longitude=0):
+    def insert_to_table(self, nametable, time_detect, time_add, adress='0', latitude=0, longitude=0, pothole_class=1):
         if Database.isInDatabase(self, nametable):
-            coordinates = 'Point({},{})'.format(latitude, longitude)
-            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s, %s, %s)''', (time_detect, time_add, adress, coordinates))
+            coordinates = 'Point({} {})'.format(latitude, longitude)
+            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s, %s)''', (time_detect, time_add, adress, coordinates, pothole_class))
 
     #Получение количества и списка таблиц
     def _getTables(self):
         self.cursor.execute("""SELECT table_name FROM information_schema.tables
         WHERE table_schema = 'public'""")
-        tables = [table[0] for table in self.cursor.fetchall()]
+        tables = [table[0] for table in self.cursor.fetchall() if not(table[0] in self.__notTables)]
         count = len(tables)
         return count, tables
+    
+    def getInfoFromTable(self, nameTable):
+        self.cursor.execute('''SELECT time_detect, time_add, adress, 
+                            ST_AsText(ST_CollectionExtract(geometry)), pothole_class
+                             FROM {}
+                            ORDER BY adress, pothole_class'''.format(nameTable))
+        return self.cursor.fetchall()
 
     #Удаление таблицы
     def drop_table(self, names):
