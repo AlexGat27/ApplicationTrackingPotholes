@@ -38,5 +38,5 @@ class ExcelGenerator(BaseCtrl):
         coords = self.__getCoordsFromPoint(info_np)
 
         data = pd.DataFrame(data=np.hstack((info_np[:,:3], coords, info_np[:,4:5])), columns=columns)
-        data.to_excel(path, sheet_name=sheet_name)
+        data.to_excel(path, sheet_name=sheet_name, index=False)
         self.recordConsole("Таблица {} в формате Excel успешно создана\n\n".format(name))
