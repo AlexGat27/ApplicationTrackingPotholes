@@ -1,0 +1,7 @@
+opencv-python==4.7.0.68
+numpy
+os-sys
+psycopg2
+pandas
+tk
+ultralitycs
