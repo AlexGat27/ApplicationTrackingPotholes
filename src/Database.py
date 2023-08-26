@@ -7,7 +7,7 @@ class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
     default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'PostgresGPS', 'port':'5432'}
-    __columns = '(time_detect, time_add, adress, geometry, pothole_class)' #Колонки, в которые ведется запись
+    __columns = '(time_detect, adress, geometry, pothole_class)' #Колонки, в которые ведется запись
     __notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
 
     #Переопределение метода __new__ для создания только одного объекта класса
@@ -52,7 +52,7 @@ class Database():
                     f'''create table {name}
                     (id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                     time_detect TIMESTAMP,
-                    time_add TIMESTAMP,
+                    time_add TIMESTAMP default current_timestamp,
                     adress text COLLATE pg_catalog."default" NOT NULL,
                     geometry geometry(Point, 3857),
                     pothole_class SMALLINT);'''
@@ -60,10 +60,10 @@ class Database():
         self.sizeDB, self.tables = Database._getTables(self)
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable, time_detect, time_add, adress='0', latitude=0, longitude=0, pothole_class=1):
+    def insert_to_table(self, nametable, time_detect, adress='0', latitude=0, longitude=0, pothole_class=1):
         if Database.isInDatabase(self, nametable):
             coordinates = 'Point({} {})'.format(latitude, longitude)
-            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s, %s)''', (time_detect, time_add, adress, coordinates, pothole_class))
+            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s, %s)''', (time_detect, adress, coordinates, pothole_class))
 
     #Получение количества и списка таблиц
     def _getTables(self):

@@ -36,9 +36,8 @@ class MediaProcessingCtrl(BaseCtrl):
                         for id in results.boxes.id.cpu().numpy().astype(int):
                             if id not in ids: 
                                 ids.append(id)
-                                time_add = datetime.today()
                                 time_detect = datetime.today()
-                                database.insert_to_table(nametable,time_detect, time_add, random.choice(self.__street),
+                                database.insert_to_table(nametable,time_detect, random.choice(self.__street),
                                                           random.uniform(3360000, 3400000), random.uniform(8370000, 8400000), random.randint(1,4))
                                 if is_save_frame:
                                     name_file = "Annotated_" + video_path.split('/')[-1].split('.')[0] + '_' + str(id) + '.jpg'
@@ -61,9 +60,8 @@ class MediaProcessingCtrl(BaseCtrl):
             result = model(image_path)[0]
 
             for i in range(len(result.boxes)):
-                time_add = datetime.today()
                 time_detect = datetime.today()
-                database.insert_to_table(nametable, time_add, time_detect, random.choice(self.__street),
+                database.insert_to_table(nametable, time_detect, random.choice(self.__street),
                                           random.uniform(3360000, 3400000), random.uniform(8370000, 8400000), random.randint(1,4))
 
             if is_save_frame:
