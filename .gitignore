@@ -1,3 +1,5 @@
-!.jpg
-!pothole
-!.pyc
+!Media/**/.jpg
+Media/Pictures/
+Media/Video/
+
+!*.pyc
