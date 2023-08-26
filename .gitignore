@@ -1,5 +1,5 @@
-!Media/**/.jpg
-Media/Pictures/
-Media/Video/
+Media/**/.jpg
+!Media/Pictures/
+!Media/Video/
 
-!*.pyc
+*.pyc
