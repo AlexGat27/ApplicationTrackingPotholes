@@ -1,4 +1,4 @@
-Media/**/.jpg
+Media/*.jpg
 !Media/Pictures/
 !Media/Video/
 
