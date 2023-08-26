@@ -1,6 +1,4 @@
-from src.View.ChildrenViews.CheckDatabaseView import *
 from src.View.ChildrenViews.ExcelGeneratorView import *
-from src.View.ChildrenViews.GraphicMapView import *
 from src.View.ChildrenViews.MediaProcessingView import *
 from src.View.ChildrenViews.HomeView import *
 

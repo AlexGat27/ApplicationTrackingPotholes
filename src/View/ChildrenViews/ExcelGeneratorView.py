@@ -20,18 +20,18 @@ class ExcelGeneratorView(BaseView):
         self.excelGenerator.create_excel_table(nameTable, pathExcel, name_page)
 
     def __create_and_pack_elements(self):
-        path_label = tkinter.Label(self.left_frame, text="Путь сохранения", font=self.default_font, bg=self.leftBG)
+        path_label = tkinter.Label(self.left_frame, text="Путь сохранения", font=self.heading_font, bg=self.leftBG)
         path_label.pack(pady=5, fill="x")
         self.path_entry = tkinter.Entry(self.left_frame)
         self.path_entry.pack(fill='x', padx=5, pady=5)
         review_btn = tkinter.Button(self.left_frame, text="Обзор", command=self.__reviewBtn_clicked)
         review_btn.pack(fill="x", padx=5, pady=5)
-        name_page_label = tkinter.Label(self.left_frame, text="Название страницы", font=self.default_font, bg=self.leftBG)
+        name_page_label = tkinter.Label(self.left_frame, text="Название страницы", font=self.heading_font, bg=self.leftBG)
         name_page_label.pack(pady=5, fill="x")
         self.sheet_entry = tkinter.Entry(self.left_frame)
         self.sheet_entry.pack(fill='x', padx=5, pady=5)
         
-        name_table_label = tkinter.Label(self.right_frame, text="Название таблицы", font=self.default_font)
+        name_table_label = tkinter.Label(self.right_frame, text="Название таблицы", font=self.heading_font)
         name_table_label.pack(pady=5, fill="x")
         self.combobox = tkinter.ttk.Combobox(self.right_frame, values=self.excelGenerator.set_tables_combobox(),
                                               postcommand=lambda: self.combobox.configure(values=self.excelGenerator.set_tables_combobox()))

@@ -15,7 +15,7 @@ class MediaProcessingCtrl(BaseCtrl):
     __street = ['Ushakova', 'Kirovogradskaia', 'Naximova', 'Zakamskaia', 'Ribalko', 'Astraxanskaia']
 
     #Основной процесс обработки видео, записи стопкадров в папку Media/{nametable} и координат в таблицу
-    def __videoProcessing(self, model, video_path, database, nametable, is_save_frame=True):
+    def __videoProcessing(self, model, video_path, database, nametable, is_save_frame):
         if video_path.split('.')[-1] in self.__support_vid_ext:
             cap = cv2.VideoCapture(video_path)
 
@@ -56,7 +56,7 @@ class MediaProcessingCtrl(BaseCtrl):
             return len(ids)
 
     #Основной процесс обработки фото, записи фотографии в папку Media/{nametable} и координат в таблицу
-    def __imageProcessing(self, model, image_path, database, nametable, is_save_frame=True):
+    def __imageProcessing(self, model, image_path, database, nametable, is_save_frame):
         if image_path.split('.')[-1] in self.__support_img_ext:
             result = model(image_path)[0]
 
@@ -78,7 +78,37 @@ class MediaProcessingCtrl(BaseCtrl):
             return True
         else:
             return False
+
+    #Функция проверки подключения, модели, таблицы перед обработкой медиафайлов
+    def mediaProcessing(self, nameTable, index=1, isSaveFrame=False):
+        if not(self.checkConnectionBD()):
+            return None
         
+        if self.model is None:
+            self.recordConsole("Не выбрана модель\n\n")
+            return None
+
+        if self.database.isInDatabase(nameTable):
+
+            if index == 1:
+                directory = tkinter.filedialog.askdirectory()
+                media = os.listdir(directory)
+                self.recordConsole("Идет процесс обработки папки с фото...\n")
+                for med in media:
+                    image_path = os.path.join(directory, med).replace(os.sep, '/')
+                    succes = self.__imageProcessing(self.model, image_path, self.database, nameTable, isSaveFrame)
+                    if succes: self.recordConsole("Фото {} обработано успешно\n".format(med))
+                    else: self.recordConsole("Ошибка обработки фото {}, такого разрешения не существует \n".format(med))
+                self.recordConsole("Запись в таблицу {} совершена успешно\n\n".format(nameTable))
+
+            elif index == 2:
+                video_path = tkinter.filedialog.askopenfilename()
+                self.recordConsole("Идет процесс обработки видео...\n")
+                succes = self.__videoProcessing(self.model, video_path, self.database, nameTable, isSaveFrame)
+                if succes: self.recordConsole("Запись видео {} в таблицу {} совершена успешно\n\n".format(video_path.split('/')[-1], nameTable))
+        else:
+            self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(nameTable))
+
     #Установка модели
     def set_model(self, model_path):
         if model_path.split('.')[-1] in self.__support_model_ext:
@@ -88,36 +118,6 @@ class MediaProcessingCtrl(BaseCtrl):
         else:
             self.recordConsole("Ошибка, такой модели не существует\n\n")
             return False
-
-    #Функция проверки подключения, модели, таблицы перед обработкой медиафайлов
-    def mediaProcessing(self, name, index=1):
-        if not(self.checkConnectionBD()):
-            return None
-        
-        if self.model is None:
-            self.recordConsole("Не выбрана модель\n\n")
-            return None
-
-        if self.database.isInDatabase(name):
-
-            if index == 1:
-                directory = tkinter.filedialog.askdirectory()
-                media = os.listdir(directory)
-                self.recordConsole("Идет процесс обработки папки с фото...\n")
-                for med in media:
-                    image_path = os.path.join(directory, med).replace(os.sep, '/')
-                    succes = self.__imageProcessing(self.model, image_path, self.database, name)
-                    if succes: self.recordConsole("Фото {} обработано успешно\n".format(med))
-                    else: self.recordConsole("Ошибка обработки фото {}, такого разрешения не существует \n".format(med))
-                self.recordConsole("Запись в таблицу {} совершена успешно\n\n".format(name))
-
-            elif index == 2:
-                video_path = tkinter.filedialog.askopenfilename()
-                self.recordConsole("Идет процесс обработки видео...\n")
-                succes = self.__videoProcessing(self.model, video_path, self.database, name)
-                if succes: self.recordConsole("Запись видео {} в таблицу {} совершена успешно\n\n".format(video_path.split('/')[-1], name))
-        else:
-            self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(name))
 
     def __init__(self, console):
         super().__init__(console)

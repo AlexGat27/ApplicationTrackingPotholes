@@ -9,7 +9,7 @@ import tkinter.filedialog
 #Базовый класс-вьювер с элементами на странице по умолчанию
 class BaseView(tkinter.Frame):
     leftBG = '#E1E7E5' #Цвет левого фрейма
-    default_font = ("Comic Sans MS", 13) #Базовый шрифт (можно поменять)
+    heading_font = ("Comic Sans MS", 13) #Заголовочный шрифт (можно поменять)
 
     def __create_and_pack_elements(self):
         self.left_frame = tkinter.Frame(self, bg=self.leftBG)
