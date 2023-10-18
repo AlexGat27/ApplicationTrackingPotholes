@@ -3,3 +3,4 @@ Media/*.jpg
 !Media/Video/
 
 *.pyc
+.env

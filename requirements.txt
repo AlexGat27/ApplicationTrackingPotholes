@@ -3,5 +3,6 @@ numpy
 os-sys
 psycopg2
 pandas
+dotenv
 tk
 ultralitycs

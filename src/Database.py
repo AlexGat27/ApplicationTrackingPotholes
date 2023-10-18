@@ -1,3 +1,15 @@
+'''
+    Файл с взаимодействием с базой данных, класс имееет функционал:
+    1. Подключение - отключение
+    2. Создание - удаление таблицы
+    3. Добавление записи в таблицу
+    4. Получение количества таблиц
+    5. Экспорт таблицы
+    6. Получение  данных, есть такая таблица в бд или нет
+    7. Очистка таблицы
+
+    Оформлен с применением паттерна Singleton
+'''
 import psycopg2
 from psycopg2 import Error
 import os
@@ -6,7 +18,6 @@ import numpy as np
 class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
-    default_parametres_BD = {'host':'127.0.0.1', 'user':'postgres', 'password':'Shurikgat2704', 'database':'PostgresGPS', 'port':'5432'}
     __columns = '(time_detect, adress, geometry, pothole_class)' #Колонки, в которые ведется запись
     __notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
 
@@ -20,7 +31,7 @@ class Database():
         self.isConnect = False
 
     #Подключение к Базе данных
-    def connect_to_bd(self, host='127.0.0.1', user='postgres', password='Shurikgat2704', database='PostgresGPS', port='5432'):
+    def connect_to_bd(self, host, user, password, database, port):
         try:
             self.connection = psycopg2.connect(
                 host=host,
