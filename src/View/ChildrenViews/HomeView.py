@@ -1,16 +1,16 @@
 from src.View.BaseView import *
 from src.ViewControl.ChildrenCtrl.HomeViewCtrl import *
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 #Класс-вьювер для отображения домашнего окна 
 class HomeView(BaseView):
     __default_parametres_BD = {
-        'host':os.getenv('DB_HOST'),
-        'user':os.getenv('DB_USER'),
-        'password':os.getenv('DB_PASSWORD'),
-        'database':os.getenv('DB_NAME'),
-        'port':os.getenv('DB_PORT')
+        'host':"localhost",
+        'user':'postgres',
+        'password':'Shurikgat2704',
+        'database':'PostgresGPS',
+        'port':'5432'
     }
 
     def __connect_btn_clicked(self):
