@@ -62,8 +62,6 @@ class Database():
                 self.cursor.execute(
                     f'''create table {name}
                     (id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
-                    createdAt TIMESTAMP,
-                    updatedAt TIMESTAMP default current_timestamp,
                     adress text COLLATE pg_catalog."default" NOT NULL,
                     geometry geometry(Point, 3857),
                     pothole_class SMALLINT);'''

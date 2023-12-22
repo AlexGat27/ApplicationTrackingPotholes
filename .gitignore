@@ -1,6 +1,5 @@
-Media/*.jpg
-!Media/Pictures/
-!Media/Video/
+Media/
 
+.venv/
 *.pyc
 .env
