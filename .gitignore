@@ -1,5 +1,5 @@
 Media/
-
+.idea/
 .venv/
 *.pyc
 .env

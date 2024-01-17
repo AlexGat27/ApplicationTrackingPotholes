@@ -18,8 +18,8 @@ import numpy as np
 class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
-    __columns = '(geometry, adress, pothole_class)' #Колонки, в которые ведется запись
-    __notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
+    _columns = '(geometry, adress, pothole_class)' #Колонки, в которые ведется запись
+    _notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
 
     #Переопределение метода __new__ для создания только одного объекта класса
     def __new__(cls):
@@ -62,17 +62,18 @@ class Database():
                 self.cursor.execute(
                     f'''create table {name}
                     (id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
-                    adress text COLLATE pg_catalog."default" NOT NULL,
-                    geometry geometry(Point, 3857),
-                    pothole_class SMALLINT);'''
+                    geomCRS3857 geometry(Point, 3857),
+                    geomCRS4326 geometry(Point, 4326),
+                    );'''
                 )
         self.sizeDB, self.tables = Database._getTables(self)
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable, time_detect, adress='0', latitude=0, longitude=0, pothole_class=1):
+    def insert_to_table(self, nametable, crs3857_x=0, crs3857_y=0, crs4326_lat=0, crs4326_lon=0):
         if Database.isInDatabase(self, nametable):
-            coordinates = 'Point({} {})'.format(latitude, longitude)
-            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s)''', (coordinates, adress, pothole_class))
+            crs3857 = 'Point({} {})'.format(crs3857_x, crs3857_y)
+            crs4326 = 'Point({} {})'.format(crs4326_lat, crs4326_lon)
+            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s)''', (crs3857, crs4326))
 
     #Получение количества и списка таблиц
     def _getTables(self):
@@ -83,10 +84,10 @@ class Database():
         return count, tables
     
     def getInfoFromTable(self, nameTable):
-        self.cursor.execute('''SELECT time_detect, time_add, adress, 
-                            ST_AsText(ST_CollectionExtract(geometry)), pothole_class
-                             FROM {}
-                            ORDER BY adress, pothole_class'''.format(nameTable))
+        self.cursor.execute('''SELECT time_detect, time_add,
+                            ST_AsText(ST_CollectionExtract(geomCRS3857)), 
+                            ST_AsText(ST_CollectionExtract(geomCRS4326))
+                            FROM {} ORDER BY adress, pothole_class'''.format(nameTable))
         return self.cursor.fetchall()
 
     #Удаление таблицы

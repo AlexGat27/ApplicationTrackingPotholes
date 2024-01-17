@@ -1,5 +1,5 @@
 from src.View.BaseView import *
-from src.ViewControl.ChildrenCtrl.MediaProcessingCtrl import *
+from src.Controllers.ChildrenCtrl.MediaProcessingCtrl import *
 
 class MediaProcessingView(BaseView):
 
@@ -21,7 +21,7 @@ class MediaProcessingView(BaseView):
         else:
             self.mediaProcessCtrl.recordConsole("Не выбрано действие (обработать фото или видео)\n\n")
     
-    def __create_and_pack_elements(self):
+    def __create_children_elements(self):
         record_radio_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)
         record_radio_frame.place(y=10, relx=0.05, relwidth=0.9, height=140)
         self.record_change_val = tkinter.IntVar()
@@ -68,4 +68,4 @@ class MediaProcessingView(BaseView):
     def __init__(self):
         super().__init__()
         self.mediaProcessCtrl = MediaProcessingCtrl(self.console)
-        self.__create_and_pack_elements()
+        self.__create_children_elements()

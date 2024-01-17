@@ -1,4 +1,4 @@
-from src.View.Application import App
+from src.Application import App
 if __name__ == "__main__":
     app = App()
     app.mainloop()
