@@ -18,8 +18,8 @@ import numpy as np
 class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
-    _columns = '(geometry, adress, pothole_class)' #Колонки, в которые ведется запись
-    _notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
+    __columns = '(geomCRS3857, geomCRS4326)' #Колонки, в которые ведется запись
+    __notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
 
     #Переопределение метода __new__ для создания только одного объекта класса
     def __new__(cls):
@@ -63,16 +63,15 @@ class Database():
                     f'''create table {name}
                     (id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                     geomCRS3857 geometry(Point, 3857),
-                    geomCRS4326 geometry(Point, 4326),
-                    );'''
+                    geomCRS4326 geometry(Point, 4326));'''
                 )
         self.sizeDB, self.tables = Database._getTables(self)
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable, crs3857_x=0, crs3857_y=0, crs4326_lat=0, crs4326_lon=0):
+    def insert_to_table(self, nametable, crs3857, crs4326):
         if Database.isInDatabase(self, nametable):
-            crs3857 = 'Point({} {})'.format(crs3857_x, crs3857_y)
-            crs4326 = 'Point({} {})'.format(crs4326_lat, crs4326_lon)
+            crs3857 = 'Point({} {})'.format(crs3857['x'], crs3857['y'])
+            crs4326 = 'Point({} {})'.format(crs4326['lat'], crs4326['lon'])
             self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s)''', (crs3857, crs4326))
 
     #Получение количества и списка таблиц
@@ -84,10 +83,10 @@ class Database():
         return count, tables
     
     def getInfoFromTable(self, nameTable):
-        self.cursor.execute('''SELECT time_detect, time_add,
+        self.cursor.execute('''SELECT
                             ST_AsText(ST_CollectionExtract(geomCRS3857)), 
                             ST_AsText(ST_CollectionExtract(geomCRS4326))
-                            FROM {} ORDER BY adress, pothole_class'''.format(nameTable))
+                            FROM {}'''.format(nameTable))
         return self.cursor.fetchall()
 
     #Удаление таблицы

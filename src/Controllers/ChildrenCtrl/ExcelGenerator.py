@@ -3,20 +3,14 @@ import numpy as np
 import pandas as pd
 
 class ExcelGenerator(BaseCtrl):
-    def _getCoordsFromPoint(self, info_np):
-        coords = []
-        for i, row in enumerate(info_np):
-            row[3] = row[3].replace('POINT', '')
-            row[3] = row[3].replace('(', '')
-            row[3] = row[3].replace(')', '')
-            split_coords = row[3].split()
-            if i == 0:
-                coords = split_coords
-            else:
-                coords = np.vstack((coords, split_coords))
-        return coords
-
-    def create_excel_table(self, name, path, sheet_name):
+    def __getCoordsFromPoint(self, point: str):
+        point = point.replace('POINT', '')
+        point = point.replace('(', '')
+        point = point.replace(')', '')
+        split_coords = point.split()
+        return split_coords
+    
+    def __errorHandler(self, name, path):
         if not(self.checkConnectionBD()):
             return None
         if name == '':
@@ -25,18 +19,21 @@ class ExcelGenerator(BaseCtrl):
         if path == '' or path.split('.')[-1] != 'xlsx':
             self.recordConsole("Неправильно выбран путь файла\n\n")
             return None
+
+    def create_excel_table(self, name, path, sheet_name):
+        if self.__errorHandler(name, path):
+            return None
         
         info_db = self.database.getInfoFromTable(name)
-        columns = np.array(["Time_Add", "Time_detect", "crs3857_x", "crs3857_y", "crs4326_x", "crs4326_y"])
-        info_np = []
+        columns = np.array(["Crs3857_x", "Crs3857_y", "Crs4326_lat", "Crs4326_lon"])
+        data_np = []
         for i, row in enumerate(info_db):
+            new_row = self.__getCoordsFromPoint(row[0]) + self.__getCoordsFromPoint(row[1])
             if i == 0:
-                info_np = row
+                data_np = new_row
             else:    
-                info_np = np.vstack((info_np, row))
+                data_np = np.vstack((data_np, new_row))
 
-        coords = self._getCoordsFromPoint(info_np)
-
-        data = pd.DataFrame(data=np.hstack((info_np[:,:3], coords, info_np[:,4:5])), columns=columns)
+        data = pd.DataFrame(data=data_np, columns=columns)
         data.to_excel(path, sheet_name=sheet_name, index=False)
         self.recordConsole("Таблица {} в формате Excel успешно создана\n\n".format(name))
