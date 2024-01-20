@@ -63,7 +63,7 @@ class MediaProcessingCtrl(BaseCtrl):
             elif index == 2:
                 video_path = tkinter.filedialog.askopenfilename()
                 self.recordConsole("Идет процесс обработки видео...\n")
-                succes = self.__videoProcessing(self.model, video_path, self.database, nameTable, isSaveFrame)
+                succes = self.__videoProcessing(video_path, self.database, nameTable, isSaveFrame)
                 if succes: self.recordConsole("Запись видео {} в таблицу {} совершена успешно\n\n".format(video_path.split('/')[-1], nameTable))
         else:
             self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(nameTable))
