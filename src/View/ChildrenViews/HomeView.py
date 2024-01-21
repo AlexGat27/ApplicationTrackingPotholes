@@ -1,5 +1,5 @@
 from src.View.BaseView import *
-from src.Controllers.ChildrenCtrl.HomeViewCtrl import *
+from src.Controllers.PageControllers.HomeViewCtrl import *
 # from dotenv import load_dotenv
 # load_dotenv()
 

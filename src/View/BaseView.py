@@ -1,5 +1,5 @@
 from src.Database import *
-from src.Controllers.BaseCtrl import *
+from src.Controllers.PageControllers.BaseCtrl import *
 import tkinter
 import tkinter.ttk
 import tkinter.messagebox

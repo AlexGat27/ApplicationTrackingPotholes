@@ -1,5 +1,5 @@
 from src.View.BaseView import *
-from src.Controllers.ChildrenCtrl.MediaProcessingCtrl import *
+from src.Controllers.PageControllers.MediaProcessingCtrl import *
 
 class MediaProcessingView(BaseView):
 

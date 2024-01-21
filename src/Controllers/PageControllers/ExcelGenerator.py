@@ -1,4 +1,4 @@
-from src.Controllers.BaseCtrl import *
+from src.Controllers.PageControllers.BaseCtrl import *
 import numpy as np
 import pandas as pd
 

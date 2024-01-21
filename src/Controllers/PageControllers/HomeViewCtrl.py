@@ -1,4 +1,4 @@
-from src.Controllers.BaseCtrl import *
+from src.Controllers.PageControllers.BaseCtrl import *
 
 #Класс контроллер для домашней страницы
 class HomeViewCtrl(BaseCtrl):

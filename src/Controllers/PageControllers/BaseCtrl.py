@@ -1,5 +1,4 @@
 from src.Database import *
-import json
 import tkinter
 import tkinter.ttk
 import tkinter.messagebox
