@@ -1,3 +1,6 @@
-ultralytics
+opencv-python
+numpy
+pandas
 psycopg2
 tk
+aiohttp

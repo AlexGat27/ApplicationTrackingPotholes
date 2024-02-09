@@ -13,7 +13,6 @@
 import psycopg2
 from psycopg2 import Error
 import os
-import numpy as np
 
 class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
