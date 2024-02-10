@@ -23,11 +23,13 @@ class MediaRequestsCtrl:
             queue.task_done()
 
     async def __handle_images(media_paths: list[str], queue: asyncio.Queue):
+        futures = []
         for med in media_paths:
             future = asyncio.Future()
             await queue.put((med, future))
-            result = await future
-            print(result)
+            futures.append(future)
+        results = await asyncio.gather(*futures)
+        return results
 
     @staticmethod      
     async def ImagesProcessing(url, media_paths, nameTable, is_save_frame) -> list[asyncio.Future]:
@@ -42,9 +44,10 @@ class MediaRequestsCtrl:
         queue = asyncio.Queue()
         handle_images_task = asyncio.create_task(MediaRequestsCtrl.__handle_images(media_paths, queue))
         processing_task = asyncio.create_task(MediaRequestsCtrl.__processImages(url, data, queue))
-        await handle_images_task
+        response = await handle_images_task
         await queue.join()
         processing_task.cancel()
+        return response
 
     @staticmethod  
     async def VideoProcessing(url, video_path, nameTable, is_save_frame):
@@ -62,6 +65,5 @@ class MediaRequestsCtrl:
             'video_path': video_path,
             'frameLimit': 50
         }
-        print(data)
         task = asyncio.create_task(MediaRequestsCtrl.__send_data_to_server(url, data))
         return await asyncio.gather(task)
