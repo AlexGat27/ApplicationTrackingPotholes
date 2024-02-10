@@ -43,6 +43,6 @@ class MediaProcessingCtrl(BaseCtrl):
 
     def __init__(self, console):
         super().__init__(console)
-        self.__imageServiceURL = 'http://localhost:6000/imageProcessing?platform=Application'
-        self.__videoServiceURL = 'http://localhost:6000/videoProcessing?platform=Application'
-        self.__scplitURL = 'http://localhost:6000/videoSplit?platform=Application'
+        self.__imageServiceURL = 'http://localhost:6002/imageProcessing'
+        self.__videoServiceURL = 'http://localhost:6002/videoProcessing'
+        self.__scplitURL = 'http://localhost:6002/videoSplit'

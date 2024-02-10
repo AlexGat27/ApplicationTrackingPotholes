@@ -1,6 +1,6 @@
 import aiohttp
 import asyncio
-from random import random
+import random
 
 class MediaRequestsCtrl:
 
@@ -19,13 +19,14 @@ class MediaRequestsCtrl:
     @staticmethod      
     async def ImagesProcessing(url, media_paths, nameTable, is_save_frame):
         tasks = []
+        print(is_save_frame, bool(is_save_frame))
         data = {
-            'is_save_frame': str(bool(is_save_frame)),
+            'is_save_frame': str(is_save_frame),
             'nameTable': nameTable,
-            'fieldOfView': 60,
-            'height': 30,
-            'camX': random.uniform(3360000, 3400000), 'camY': random.uniform(8370000, 8400000),
-            'angleZ': 0
+            'fieldOfView': str(60),
+            'height': str(30),
+            'camX': str(random.uniform(3360000, 3400000)), 'camY': str(random.uniform(8370000, 8400000)),
+            'angleZ': str(0)
         }
         for med in media_paths:
             tasks.append(asyncio.create_task(MediaRequestsCtrl.__send_data_to_server(url, data, med)))
