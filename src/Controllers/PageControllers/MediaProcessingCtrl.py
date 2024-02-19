@@ -38,10 +38,10 @@ class MediaProcessingCtrl(BaseCtrl):
         else:
             self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(nameTable))
 
-    def __save_to_db(self, nameTable, data):
-        for d in data:
-            for coords in d:
-                self.database.insert_to_table(nameTable, coords['crs3857'], coords['crs4326'])
+    def __save_to_db(self, nameTable: str, response: list):
+        for imageInfo in response:
+            for pothole in imageInfo:
+                self.database.insert_to_table(nameTable, pothole['crs3857'], pothole['crs4326'], pothole['image_path'])
 
     def __init__(self, console):
         super().__init__(console)

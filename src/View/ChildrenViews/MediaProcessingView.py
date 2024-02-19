@@ -7,9 +7,9 @@ class MediaProcessingView(BaseView):
         nameTable = self.combobox.get()
         if self.record_change_val.get() == 1:
             self.mediaProcessCtrl.MediaProcessing(nameTable, 1)
+        # elif self.record_change_val.get() == 2:
+        #     self.mediaProcessCtrl.MediaProcessing(nameTable, 2)
         elif self.record_change_val.get() == 2:
-            self.mediaProcessCtrl.MediaProcessing(nameTable, 2)
-        elif self.record_change_val.get() == 3:
             self.mediaProcessCtrl.SplitVideo()
         else:
             self.mediaProcessCtrl.recordConsole("Не выбрано действие (обработать фото или видео)\n\n")
@@ -21,11 +21,11 @@ class MediaProcessingView(BaseView):
         image_radio = tkinter.Radiobutton(record_radio_frame, text="Обработка фото", variable=self.record_change_val,
                                            value=1, font=self.heading_font, bg=self.leftBG)
         image_radio.pack(pady=[25, 0], side="top")
-        video_radio = tkinter.Radiobutton(record_radio_frame, text="Обработка видео", variable=self.record_change_val,
-                                           value=2, font=self.heading_font, bg=self.leftBG)
-        video_radio.pack(pady=[0, 0], side="top")
+        # video_radio = tkinter.Radiobutton(record_radio_frame, text="Обработка видео", variable=self.record_change_val,
+        #                                    value=2, font=self.heading_font, bg=self.leftBG)
+        # video_radio.pack(pady=[0, 0], side="top")
         video_split_radio = tkinter.Radiobutton(record_radio_frame, text="Нарезка видео", variable=self.record_change_val,
-                                           value=3, font=self.heading_font, bg=self.leftBG)
+                                           value=2, font=self.heading_font, bg=self.leftBG)
         video_split_radio.pack(pady=[0, 25], side="top")
 
         check_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)

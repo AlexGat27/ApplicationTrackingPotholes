@@ -39,7 +39,7 @@ class MediaRequestsCtrl:
         return degrees + minutes + seconds
 
     @staticmethod      
-    async def ImagesProcessing(url, media_paths, nameTable, is_save_frame) -> list[asyncio.Future]:
+    async def ImagesProcessing(url, media_paths, nameTable) -> list[asyncio.Future]:
         dataList: list[dict] = []
         mediaList: list[str] = []
         for med in media_paths:
@@ -55,7 +55,6 @@ class MediaRequestsCtrl:
                         if value[3] == "W":
                             longitude *= -1
                         dataList.append({
-                            'is_save_frame': str(is_save_frame),
                             'nameTable': nameTable,
                             'fieldOfView': str(60),
                             'height': str(value[6]) if 6 in value.keys() else str(20),

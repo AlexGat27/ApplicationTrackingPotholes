@@ -17,7 +17,7 @@ import os
 class Database():
     #Класс базы данных, откуда осуществялется все взаимодействие с ней
     instance = None
-    __columns = '(geomCRS3857, geomCRS4326)' #Колонки, в которые ведется запись
+    __columns = '(geomCRS3857, geomCRS4326, image_path)' #Колонки, в которые ведется запись
     __notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
 
     #Переопределение метода __new__ для создания только одного объекта класса
@@ -62,16 +62,17 @@ class Database():
                     f'''create table {name}
                     (id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
                     geomCRS3857 geometry(Point, 3857),
-                    geomCRS4326 geometry(Point, 4326));'''
+                    geomCRS4326 geometry(Point, 4326),
+                    image_path VARCHAR(100));'''
                 )
         self.sizeDB, self.tables = Database._getTables(self)
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable, crs3857, crs4326):
+    def insert_to_table(self, nametable: str, crs3857: dict, crs4326: dict, image_path: str):
         if Database.isInDatabase(self, nametable):
             crs3857 = 'Point({} {})'.format(crs3857['x'], crs3857['y'])
             crs4326 = 'Point({} {})'.format(crs4326['lat'], crs4326['lon'])
-            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s)''', (crs3857, crs4326))
+            self.cursor.execute(f'''INSERT INTO {nametable} {Database.__columns} VALUES (%s, %s, %s)''', (crs3857, crs4326, image_path))
 
     #Получение количества и списка таблиц
     def _getTables(self):
