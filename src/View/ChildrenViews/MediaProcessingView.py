@@ -5,11 +5,10 @@ class MediaProcessingView(BaseView):
 
     def __action_btn_clicked(self):
         nameTable = self.combobox.get()
-        isSaveFrame = self.isSaveFrames.get()
         if self.record_change_val.get() == 1:
-            self.mediaProcessCtrl.MediaProcessing(nameTable, 1, isSaveFrame)
+            self.mediaProcessCtrl.MediaProcessing(nameTable, 1)
         elif self.record_change_val.get() == 2:
-            self.mediaProcessCtrl.MediaProcessing(nameTable, 2, isSaveFrame)
+            self.mediaProcessCtrl.MediaProcessing(nameTable, 2)
         elif self.record_change_val.get() == 3:
             self.mediaProcessCtrl.SplitVideo()
         else:
@@ -31,10 +30,6 @@ class MediaProcessingView(BaseView):
 
         check_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)
         check_frame.place(y=160, relwidth=0.9, relx=0.05, height=450)
-        self.isSaveFrames = tkinter.IntVar()
-        check_save= tkinter.Checkbutton(check_frame, text='Сохранить изображения',variable=self.isSaveFrames,
-                                    onvalue=True,offvalue=False, bg=self.leftBG)
-        check_save.pack(pady=[0, 25], side="top")
 
         label6 = tkinter.Label(self.right_frame, text="Название таблицы", font=self.heading_font)
         label6.pack(pady=5, fill="x")

@@ -16,7 +16,7 @@ class MediaProcessingCtrl(BaseCtrl):
         else: self.recordConsole("Такого расширения видео не существует")
     
     #Функция проверки подключения, модели, таблицы перед обработкой медиафайлов
-    def MediaProcessing(self, nameTable, index=1, isSaveFrame=False):
+    def MediaProcessing(self, nameTable, index=1):
         if not(self.checkConnectionBD()):
             return None
         if self.database.isInDatabase(nameTable):
@@ -24,12 +24,12 @@ class MediaProcessingCtrl(BaseCtrl):
                 directory = tkinter.filedialog.askdirectory()
                 media_paths = [os.path.join(directory, med).replace(os.sep, '/') for med in os.listdir(directory)]
                 self.recordConsole("Идет процесс обработки папки с фото...\n")
-                response = asyncio.run(MedReqCtrl.ImagesProcessing(self.__imageServiceURL, media_paths, nameTable, isSaveFrame))
+                response = asyncio.run(MedReqCtrl.ImagesProcessing(self.__imageServiceURL, media_paths, nameTable))
             elif index == 2:
                 video_path = tkinter.filedialog.askopenfilename()
                 if video_path.split('.')[-1] in self.__support_vid_ext:
                     self.recordConsole("Идет процесс обработки видео...\n")
-                    response = asyncio.run(MedReqCtrl.VideoProcessing(self.__videoServiceURL, video_path, nameTable, isSaveFrame))
+                    response = asyncio.run(MedReqCtrl.VideoProcessing(self.__videoServiceURL, video_path, nameTable))
                 else: self.recordConsole("Такого расширения видео не существует")
             if response:
                 self.__save_to_db(nameTable, response)
