@@ -31,8 +31,10 @@ class MediaProcessingCtrl(BaseCtrl):
                     self.recordConsole("Идет процесс обработки видео...\n")
                     response = asyncio.run(MedReqCtrl.VideoProcessing(self.__videoServiceURL, video_path, nameTable, isSaveFrame))
                 else: self.recordConsole("Такого расширения видео не существует")
-            self.__save_to_db(nameTable, response)
-            self.recordConsole("Запись в таблицу {} совершена успешно\n\n".format(nameTable))
+            if response:
+                self.__save_to_db(nameTable, response)
+                self.recordConsole("Запись в таблицу {} совершена успешно\n\n".format(nameTable))
+            else: self.recordConsole("Ошибка, в папке нет изображений с нужными метаданными\n\n")
         else:
             self.recordConsole("Ошибка, таблицы {} не существует\n\n".format(nameTable))
 
