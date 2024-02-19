@@ -1,6 +1,7 @@
-Media/*.jpg
-!Media/Pictures/
-!Media/Video/
+Media/
 
 *.pyc
 .env
+*.pt
+
+.venv/
