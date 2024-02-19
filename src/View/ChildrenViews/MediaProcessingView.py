@@ -1,36 +1,33 @@
 from src.View.BaseView import *
-from src.ViewControl.ChildrenCtrl.MediaProcessingCtrl import *
+from src.Controllers.PageControllers.MediaProcessingCtrl import *
 
 class MediaProcessingView(BaseView):
-
-    def __set_model(self):
-        model_path = tkinter.filedialog.askopenfilename()
-        succesful = self.mediaProcessCtrl.set_model(model_path)
-        if succesful:
-            self.model_entry.config(state="normal")
-            self.model_entry.insert(0, model_path.split('/')[-1])
-            self.model_entry.config(state="disabled")
 
     def __action_btn_clicked(self):
         nameTable = self.combobox.get()
         isSaveFrame = self.isSaveFrames.get()
         if self.record_change_val.get() == 1:
-            self.mediaProcessCtrl.mediaProcessing(nameTable, 1, isSaveFrame)
+            self.mediaProcessCtrl.MediaProcessing(nameTable, 1, isSaveFrame)
         elif self.record_change_val.get() == 2:
-            self.mediaProcessCtrl.mediaProcessing(nameTable, 2, isSaveFrame)
+            self.mediaProcessCtrl.MediaProcessing(nameTable, 2, isSaveFrame)
+        elif self.record_change_val.get() == 3:
+            self.mediaProcessCtrl.SplitVideo()
         else:
             self.mediaProcessCtrl.recordConsole("Не выбрано действие (обработать фото или видео)\n\n")
     
-    def __create_and_pack_elements(self):
+    def __create_children_elements(self):
         record_radio_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)
-        record_radio_frame.place(y=10, relx=0.05, relwidth=0.9, height=140)
+        record_radio_frame.place(y=10, relx=0.05, relwidth=0.9, height=150)
         self.record_change_val = tkinter.IntVar()
         image_radio = tkinter.Radiobutton(record_radio_frame, text="Обработка фото", variable=self.record_change_val,
                                            value=1, font=self.heading_font, bg=self.leftBG)
         image_radio.pack(pady=[25, 0], side="top")
         video_radio = tkinter.Radiobutton(record_radio_frame, text="Обработка видео", variable=self.record_change_val,
                                            value=2, font=self.heading_font, bg=self.leftBG)
-        video_radio.pack(pady=[0, 25], side="bottom")
+        video_radio.pack(pady=[0, 0], side="top")
+        video_split_radio = tkinter.Radiobutton(record_radio_frame, text="Нарезка видео", variable=self.record_change_val,
+                                           value=3, font=self.heading_font, bg=self.leftBG)
+        video_split_radio.pack(pady=[0, 25], side="top")
 
         check_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)
         check_frame.place(y=160, relwidth=0.9, relx=0.05, height=450)
@@ -39,23 +36,12 @@ class MediaProcessingView(BaseView):
                                     onvalue=True,offvalue=False, bg=self.leftBG)
         check_save.pack(pady=[0, 25], side="top")
 
-        self.model_frame = tkinter.Frame(self.left_frame, bg=self.leftBG)
-        self.model_frame.place(y=350, relwidth=0.9, relx=0.05, height=450)
-        model_label = tkinter.Label(self.model_frame, text="Название модели", font=self.heading_font, bg=self.leftBG)
-        model_label.pack(pady=5, fill="x")
-        self.model_entry = tkinter.Entry(self.model_frame)
-        self.model_entry.pack(pady=5, fill="x")
-        self.model_entry.insert(0, os.listdir('Yolo_model')[0])
-        self.model_entry.config(state="disabled")
-        set_model_btn = tkinter.Button(self.model_frame, text="Загрузить модель", command=self.__set_model)
-        set_model_btn.pack(fill='x', pady=5) 
-
         label6 = tkinter.Label(self.right_frame, text="Название таблицы", font=self.heading_font)
         label6.pack(pady=5, fill="x")
         self.combobox = tkinter.ttk.Combobox(self.right_frame, values=self.mediaProcessCtrl.set_tables_combobox(),
                                               postcommand=lambda: self.combobox.configure(values=self.mediaProcessCtrl.set_tables_combobox()))
         self.combobox.pack(pady=5, fill="x", padx=5)
-        action_table_btn = tkinter.Button(self.right_frame, text="Запиcать в таблицу", command=self.__action_btn_clicked)
+        action_table_btn = tkinter.Button(self.right_frame, text="Выполнить действие", command=self.__action_btn_clicked)
         action_table_btn.pack(fill='x', pady=5, padx=5)
 
         buttons_frame = tkinter.Frame(self.right_frame)
@@ -68,4 +54,4 @@ class MediaProcessingView(BaseView):
     def __init__(self):
         super().__init__()
         self.mediaProcessCtrl = MediaProcessingCtrl(self.console)
-        self.__create_and_pack_elements()
+        self.__create_children_elements()

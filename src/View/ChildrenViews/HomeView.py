@@ -1,16 +1,16 @@
 from src.View.BaseView import *
-from src.ViewControl.ChildrenCtrl.HomeViewCtrl import *
-from dotenv import load_dotenv
-load_dotenv()
+from src.Controllers.PageControllers.HomeViewCtrl import *
+# from dotenv import load_dotenv
+# load_dotenv()
 
 #Класс-вьювер для отображения домашнего окна 
 class HomeView(BaseView):
     __default_parametres_BD = {
-        'host':os.getenv('DB_HOST'),
-        'user':os.getenv('DB_USER'),
-        'password':os.getenv('DB_PASSWORD'),
-        'database':os.getenv('DB_NAME'),
-        'port':os.getenv('DB_PORT')
+        'host':"localhost",
+        'user':'postgres',
+        'password':'Shurikgat2704',
+        'database':'PostgresGPS',
+        'port':'5432'
     }
 
     def __connect_btn_clicked(self):
@@ -34,7 +34,7 @@ class HomeView(BaseView):
         else: 
             self.homeviewControl.recordConsole("Ошибка, не выбрано действие\n\n")
 
-    def __create_and_pack_elements(self):
+    def __create_children_elements(self):
         #Расположение элементов подключения базы данных
         root_label1 = tkinter.Label(self.left_frame, text="Подключение\n к базе данных", bg=self.leftBG,
                                     font=("Bold", 13))
@@ -107,4 +107,4 @@ class HomeView(BaseView):
     def __init__(self):
         super().__init__()
         self.homeviewControl = HomeViewCtrl(self.console)
-        self.__create_and_pack_elements()
+        self.__create_children_elements()

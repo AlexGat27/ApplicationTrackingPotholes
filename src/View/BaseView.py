@@ -1,6 +1,5 @@
 from src.Database import *
-from src.ViewControl.BaseCtrl import *
-import json
+from src.Controllers.PageControllers.BaseCtrl import *
 import tkinter
 import tkinter.ttk
 import tkinter.messagebox
@@ -10,8 +9,11 @@ import tkinter.filedialog
 class BaseView(tkinter.Frame):
     leftBG = '#E1E7E5' #Цвет левого фрейма
     heading_font = ("Comic Sans MS", 13) #Заголовочный шрифт (можно поменять)
+    left_frame: tkinter.Frame
+    right_frame: tkinter.Frame
 
     def __create_and_pack_elements(self):
+        print("CRERERERERERER")
         self.left_frame = tkinter.Frame(self, bg=self.leftBG)
         self.left_frame.pack(side='left')
         self.left_frame.pack_propagate(False)

@@ -1,5 +1,5 @@
 from src.View.BaseView import *
-from src.ViewControl.ChildrenCtrl.ExcelGenerator import *
+from src.Controllers.PageControllers.ExcelGenerator import *
 
 
 class ExcelGeneratorView(BaseView):
