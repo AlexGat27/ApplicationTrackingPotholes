@@ -1,4 +1,4 @@
-from src.Database import *
+from src.Database.Queryes import *
 import tkinter
 import tkinter.ttk
 import tkinter.messagebox

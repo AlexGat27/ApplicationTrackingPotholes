@@ -1,4 +1,4 @@
-from src.Database import *
+from src.Database.Queryes import *
 from src.Controllers.PageControllers.BaseCtrl import *
 import tkinter
 import tkinter.ttk
