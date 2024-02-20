@@ -1,4 +1,4 @@
-from src.Database.Queryes import *
+from src.Database.Queryes import SyncCore
 import tkinter
 import tkinter.ttk
 import tkinter.messagebox
@@ -10,7 +10,7 @@ class BaseCtrl():
 
     def __init__(self, console):
         self.console = console
-        self.database = Database()
+        self.database = SyncCore()
 
     #Запись сообщения в консоль
     def recordConsole(self, message):
@@ -50,5 +50,5 @@ class BaseCtrl():
     def set_tables_combobox(self):
         if not(self.database.isConnect):
             return None
-        return self.database._getTables()[1]
+        return self.database.getTables()[1]
 

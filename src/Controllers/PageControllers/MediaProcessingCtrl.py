@@ -1,6 +1,7 @@
 from src.Controllers.PageControllers.BaseCtrl import *
 from src.Controllers.MediaRequestsCtrl import MediaRequestsCtrl as MedReqCtrl
 import asyncio
+import os
 
 #Класс-обработчик медиафайлов
 class MediaProcessingCtrl(BaseCtrl):
