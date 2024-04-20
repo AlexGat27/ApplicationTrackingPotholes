@@ -1,4 +1,4 @@
-from src.Controllers.PageControllers.BaseCtrl import *
+from src.Controllers.PageControllers.BaseCtrl import BaseCtrl
 import tkinter
 import tkinter.ttk
 import tkinter.messagebox
@@ -12,7 +12,6 @@ class BaseView(tkinter.Frame):
     right_frame: tkinter.Frame
 
     def __create_and_pack_elements(self):
-        print("CRERERERERERER")
         self.left_frame = tkinter.Frame(self, bg=self.leftBG)
         self.left_frame.pack(side='left')
         self.left_frame.pack_propagate(False)

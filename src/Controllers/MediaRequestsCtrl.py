@@ -1,33 +1,49 @@
+import base64
 import aiohttp
 import asyncio
 from PIL import Image
-import random
+from src.Models.Camera import CameraSplitRequest, CameraImageProcessing
 
 class MediaRequestsCtrl:
 
-    async def __send_data_to_server(url, data: dict, file_path=None):
-        req = aiohttp.FormData()
-        if file_path is not None:
-            req.add_field('image', open(file_path, 'rb'))
-        for key, value in data.items():
-            req.add_field(key, value)
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, data=req) as response:
-                return await response.json()
+    def __init__(self) -> None:
+        self.timeout = 20
 
-    async def __processImages(url: str, queue: asyncio.Queue):
+    async def __send_data_to_server(self, url, data: dict, file_path=None):
+        async with aiohttp.ClientSession() as session:
+            form = aiohttp.FormData()
+            for key, value in data.items():
+                form.add_field(key, value)
+            if file_path:
+                with open(file_path, 'rb') as file:
+                    file_content = file.read()
+                    file_base64 = base64.b64encode(file_content).decode('utf-8')
+                    form.add_field('image', file_base64)
+            try:
+                async with session.post(url, data=form) as response:
+                    response.raise_for_status()  # Проверка ошибок в ответе
+                    return await response.json()
+            except aiohttp.ClientError as e:
+                print("Aiohttp client error:", e)
+            except aiohttp.ClientResponseError as e:
+                print("Aiohttp client response error:", e)
+            except aiohttp.ClientTimeout as e:
+                print("Aiohttp client timeout:", e)
+            except Exception as e:
+                print("Unexpected error:", e)
+
+    async def __processImages(self, url: str, queue: asyncio.Queue):
         while True:
             data, med, future = await queue.get()
-            print(med)
-            result = await MediaRequestsCtrl.__send_data_to_server(url, data, med)
+            result = await self.__send_data_to_server(url, data, med)
             future.set_result(result)
             queue.task_done()
 
-    async def __handle_images(dataList: list[dict], media_paths: list[str], queue: asyncio.Queue):
+    async def __handle_images(self, cameras: list[CameraImageProcessing], media_paths: list[str], queue: asyncio.Queue):
         futures = []
-        for data, med in zip(dataList, media_paths):
+        for camera, med in zip(cameras, media_paths):
             future = asyncio.Future()
-            await queue.put((data, med, future))
+            await queue.put((camera.model_dump(), med, future))
             futures.append(future)
         results = await asyncio.gather(*futures)
         return results
@@ -38,9 +54,8 @@ class MediaRequestsCtrl:
         seconds = dms[2] / 3600.0
         return degrees + minutes + seconds
 
-    @staticmethod      
-    async def ImagesProcessing(url, media_paths, nameTable) -> list[asyncio.Future]:
-        dataList: list[dict] = []
+    async def ImagesProcessing(self, url, media_paths, nameTable) -> list[asyncio.Future]:
+        cameras: list[CameraImageProcessing] = []
         mediaList: list[str] = []
         for med in media_paths:
             img = Image.open(med)
@@ -54,40 +69,25 @@ class MediaRequestsCtrl:
                             latitude *= -1
                         if value[3] == "W":
                             longitude *= -1
-                        dataList.append({
-                            'nameTable': nameTable,
-                            'fieldOfView': str(60),
-                            'height': str(value[6]) if 6 in value.keys() else str(20),
-                            'camX': str(longitude), 'camY': str(latitude),
-                            'angleZ': str(0)
-                        })
+                        cameras.append(CameraImageProcessing(
+                            nameTable = nameTable,
+                            fieldOfView = str(60),
+                            height = str(value[6]) if 6 in value.keys() else str(20),
+                            camX = str(longitude), camY = str(latitude),
+                            angleZ = str(0)
+                        ))
                         mediaList.append(med)
                         break
         if len(mediaList) > 0:
             queue = asyncio.Queue()
-            handle_images_task = asyncio.create_task(MediaRequestsCtrl.__handle_images(dataList, mediaList, queue))
-            processing_task = asyncio.create_task(MediaRequestsCtrl.__processImages(url, queue))
+            handle_images_task = asyncio.create_task(self.__handle_images(cameras, mediaList, queue))
+            processing_task = asyncio.create_task(self.__processImages(url, queue))
             response = await handle_images_task
             await queue.join()
             processing_task.cancel()
             return response
         else: return None
-
-    @staticmethod  
-    async def VideoProcessing(url, video_path, nameTable, is_save_frame):
-        data = {
-            'is_save_frame': str(bool(is_save_frame)),
-            'nameTable': nameTable,
-            'video_path': video_path,
-        }
-        task = asyncio.create_task(MediaRequestsCtrl.__send_data_to_server(url, data))
-        return await asyncio.gather(task)
     
-    @staticmethod
-    async def VideoSplit(url, video_path):
-        data = {
-            'video_path': video_path,
-            'frameLimit': 50
-        }
-        task = asyncio.create_task(MediaRequestsCtrl.__send_data_to_server(url, data))
+    async def VideoSplit(self, url, cam: CameraSplitRequest):
+        task = asyncio.create_task(self.__send_data_to_server(url, cam.model_dump()))
         return await asyncio.gather(task)

@@ -1,4 +1,9 @@
 from src.Application import App
+import asyncio
 
-root = App()
-root.mainloop()
+def main():
+    root = App()
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()

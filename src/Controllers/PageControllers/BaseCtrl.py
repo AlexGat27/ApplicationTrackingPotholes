@@ -37,7 +37,7 @@ class BaseCtrl():
         if not(self.checkConnectionBD()):
             return None
         
-        tables =  self.database._getTables()[1]
+        tables =  self.database.getTables()[1]
         if len(tables) == 0:
             self.recordConsole("Таблиц в базе данных не существует\n\n")
             return None

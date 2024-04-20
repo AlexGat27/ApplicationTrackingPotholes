@@ -9,7 +9,7 @@
     7. Очистка таблицы
 
 '''
-from sqlalchemy import create_engine, text, Column, Integer, String, DateTime, MetaData
+from sqlalchemy import create_engine, text, func, Column, Integer, String, DateTime, MetaData
 from geoalchemy2 import Geometry
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -19,7 +19,7 @@ import os
 Base: DeclarativeMeta = declarative_base()
 
 class SyncCore():
-    __columns = '(geomCRS3857, geomCRS4326, image_path)' #Колонки, в которые ведется запись
+    __columns = '(created_at, crs3857, crs4326, image_path)' #Колонки, в которые ведется запись
     __notTables = '(spatial_ref_sys, raster_columns, raster_overviews, geography_columns, geometry_columns)'
     __instance = None
 
@@ -62,26 +62,28 @@ class SyncCore():
                 class PotholeTable(Base):
                     __tablename__ = name
                     id = Column(Integer, primary_key=True)
-                    created_at = Column(DateTime, default=datetime.utcnow)
+                    created_at = Column(DateTime)
                     crs4326 = Column(Geometry('POINT'))
                     crs3857 = Column(Geometry('POINT'))
                     image_path = Column(String(256))
-            PotholeTable.__table__.create(bind=self.engine, checkfirst=True)
+                PotholeTable.__table__.create(bind=self.engine, checkfirst=True)
+        self.metadata.reflect(bind=self.engine)
         self.sizeDB, self.tables = self.getTables()
 
     #Запись данных в таблицу
-    def insert_to_table(self, nametable: str, crs3857: dict, crs4326: dict, image_path: str):
+    def insert_potholes(self, nametable: str, crs3857: dict, crs4326: dict, image_path: str):
         if self.isInDatabase(nametable):
             session = self.Session()
-            crs3857 = 'SRID=3857;POINT({}, {}))'.format(crs3857['x'], crs3857['y'])
-            crs4326 = 'SRID=4326;POINT({}, {}))'.format(crs4326['lat'], crs4326['lon'])
-            query = f'''INSERT INTO {nametable} {self.__columns} VALUES (ST_GeomFromText({crs3857}), ST_GeomFromText({crs4326}), '{image_path}')'''
+            crs3857 = "SRID=3857;POINT({} {})".format(crs3857['x'], crs3857['y'])
+            crs4326 = "SRID=4326;POINT({} {})".format(crs4326['lat'], crs4326['lon'])
+            query = f'''INSERT INTO {nametable} {self.__columns} VALUES ('{datetime.now()}', ST_GeomFromText('{crs3857}'), ST_GeomFromText('{crs4326}'), '{image_path}')'''
             session.execute(text(query))
             session.commit()
             session.close()
 
     #Получение количества и списка таблиц
     def getTables(self):
+        print(self.metadata.tables.keys())
         return len(self.metadata.tables), list(self.metadata.tables.keys())
 
     #Удаление таблицы
@@ -89,6 +91,7 @@ class SyncCore():
         names_list = names.split()
         for name in names_list:
             self.metadata.tables[name].drop(bind=self.engine)
+            self.metadata.remove(self.metadata.tables[name])  # Удаляем таблицу из метаданных
         self.sizeDB, self.tables = self.getTables()
 
     #Проверка существования таблицы в БД

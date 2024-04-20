@@ -1,5 +1,6 @@
-from src.View.BaseView import *
-from src.Controllers.PageControllers.ExcelGenerator import *
+from src.View.BaseView import BaseView
+from src.Controllers.PageControllers.ExcelGenerator import ExcelGenerator
+import tkinter
 
 
 class ExcelGeneratorView(BaseView):

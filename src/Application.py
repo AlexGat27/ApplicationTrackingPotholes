@@ -1,6 +1,7 @@
-from src.View.ChildrenViews.ExcelGeneratorView import *
-from src.View.ChildrenViews.MediaProcessingView import *
-from src.View.ChildrenViews.HomeView import *
+from src.View.ChildrenViews.ExcelGeneratorView import ExcelGeneratorView
+from src.View.ChildrenViews.MediaProcessingView import MediaProcessingView
+from src.View.ChildrenViews.HomeView import HomeView
+import tkinter
 
 #Класс приложения, объединяющий все страницы и запускающий главное окно
 class App(tkinter.Tk):
@@ -33,9 +34,6 @@ class App(tkinter.Tk):
 
         self.views = [HomeView(), MediaProcessingView(), ExcelGeneratorView()]
 
-        # checkDatabasePage_btn = tkinter.Button(options_frame, text="CheckPage", font=self.__text_opt['font'],
-        #                           fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(1))
-        # checkDatabasePage_btn.pack(side="left", padx=12)
         mediaProcessPage_btn = tkinter.Button(options_frame, text="MediaPage", font=self._text_opt['font'],
                                   fg=self._text_opt['fg'], bd=0, bg=self._text_opt['bg'], command=lambda: self.__switchWindow(1))
         mediaProcessPage_btn.pack(side="left", padx=[100,30])
@@ -45,9 +43,6 @@ class App(tkinter.Tk):
         excelGeneratorPage_btn = tkinter.Button(options_frame, text="ExcelPage", font=self._text_opt['font'],
                                   fg=self._text_opt['fg'], bd=0, bg=self._text_opt['bg'], command=lambda: self.__switchWindow(2))
         excelGeneratorPage_btn.pack(side="left", padx=[30, 100])
-        # graphmapGeneratorPage_btn = tkinter.Button(options_frame, text="GraphicMapPage", font=self.__text_opt['font'],
-        #                           fg=self.__text_opt['fg'], bd=0, bg=self.__text_opt['bg'], command=lambda: self.__switchWindow(4))
-        # graphmapGeneratorPage_btn.pack(side="left", padx=[12,50])
 
     #Инициализация класса
     def __init__(self):
